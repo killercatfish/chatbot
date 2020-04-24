@@ -9,15 +9,13 @@ import pexpect, time
 session = pexpect.spawn('/bin/bash')
 
 # send screen command
-session.sendline('screen -S test -p 0 -X stuff \'echo Hello World\'')
+session.sendline('screen -S test -p 0 -X stuff "echo Hello World"')
 session.sendline('screen -S test -p 0 -X eval "stuff \\015"')
 
 # give the command a chance to execute
 time.sleep(0.1)
 
 while True:
-    session.expect(['hello'])
-
-print(session.before)
+    session.expect('')
 
 session.close()
