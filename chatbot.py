@@ -38,13 +38,12 @@ def run(previous_length, log_length):
                 print("**** " + str(lines_to_check) + " lines added: ")
                 for i in range(lines_to_check):
                     line = lines[len(lines)-i-1]
-                    check = 'has joined with'
-
+                    check = 'has joined from IP'
+                    print("line " + str(i + 1) + ": " + line)
+                    
                     if check in line:
                         welcome(line, session)
-                    else:
-                        # print('***** NO: ' + line)
-                        break
+                        
         
         time.sleep(0.1)
     # Need to move this to an exit function when ctrl+c is pressed
@@ -53,7 +52,10 @@ def run(previous_length, log_length):
 def welcome(line, session):
     print('++++YES: ' + line)
     words = line.split(' ')
-    name = ' '.join(words[1:words.index('has')]) # Find the name, could be more than one word.
+    name = ' '.join(words[:words.index('has')]) # Find the name, could be more than one word.
+
+    print("***** Line: " + line)
+    print("***** name: " + name, end="\n\n")
 
     # cmd = 'screen -S lux -p 0 -X stuff \"Welcome, ' + name + '\"'
     cmd = 'screen -S lux -p 0 -X stuff \"Welcome, %s :-)\"' % name
