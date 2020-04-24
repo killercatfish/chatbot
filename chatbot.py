@@ -14,7 +14,7 @@ def initialize():
     # A couple of globals
     log_length = 0
     previous_length = 0
-    with open('/Applications/tmp/mylog.txt', 'r') as file:
+    with open('/Applications/logs/mylog.txt', 'r') as file:
         lines = file.readlines()
         log_length = len(lines)
     previous_length = log_length
@@ -27,7 +27,7 @@ def run(previous_length, log_length):
 
     # Continuously check log file for new entry
     while True:
-        with open('/Applications/tmp/mylog.txt', 'r') as file:
+        with open('/Applications/logs/mylog.txt', 'r') as file:
             lines = file.readlines()
             log_length = len(lines)
             if log_length > previous_length:
@@ -36,17 +36,40 @@ def run(previous_length, log_length):
                 print("**** " + str(lines_to_check) + " lines added: ")
                 for i in range(lines_to_check):
                     line = lines[len(lines)-i-1]
-                    check = 'has joined from IP'
-                    print("line " + str(i + 1) + ": " + line)
-                    
-                    if check in line:
-                        # welcome(line)
-                        t = threading.Timer(3, welcome, [line])
-                        t.start()
+                    print("LINE: " + line)
+                    check_line(line)
                         
         
         time.sleep(0.1)
     # Need to move this to an exit function when ctrl+c is pressed
+
+def check_line(line):
+    # print("line " + str(i + 1) + ": " + line)
+    # print("***" + str(split_line[1][0]))
+    # Welcome!
+    player_joined = 'has joined from IP'
+    if player_joined in line:
+        # welcome(line)
+        # https://www.geeksforgeeks.org/timer-objects-python/
+        # https://stackoverflow.com/questions/4415672/python-theading-timer-how-to-pass-argument-to-the-callback
+        t = threading.Timer(3, welcome, [line])
+        t.start()
+    
+    start = line.index(":")
+    print("Start: " + str(start))
+    line_no_name = line[start+2:]
+    check_hash_mark = True if line[start+2:][0] == '#' else False
+    # print(start)
+    line_no_name = line_no_name.split(' ')
+    line_no_name_len = len(line_no_name)
+
+
+    if check_hash_mark and line_no_name_len == 1:
+        command = line_no_name[0].rstrip()
+        print("Command entered: " + command)
+    # print(str(len(line_no_name)))
+
+    # if line[1][0] == '#' and line[len(line)-1][len(line[len(line)-1])-1]
 
 def welcome(line):
     # spawn new bash session
@@ -55,10 +78,16 @@ def welcome(line):
     name = ' '.join(words[:words.index('has')]) # Find the name, could be more than one word.
 
     print("***** Line: " + line)
-    print("***** name: " + name, end="\n\n")
+    print("***** name: " + name)
 
     # cmd = 'screen -S lux -p 0 -X stuff \"Welcome, ' + name + '\"'
-    cmd = 'screen -S lux -p 0 -X stuff \"Welcome, %s :-)\"' % name
+
+    if name == 'RogueMonk':
+        cmd = 'screen -S lux -p 0 -X stuff \"Welcome, master :-)\"'
+    else:
+        cmd = 'screen -S lux -p 0 -X stuff \"Welcome, %s :-)\"' % name
+
+    print("***** cmd: " + cmd)
     
     # # send screen command
     session.sendline(cmd)
