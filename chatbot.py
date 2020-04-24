@@ -7,7 +7,7 @@ Welcome player by name
 Guest in and out
 change settings 
 '''
-import pexpect, time
+import pexpect, time, threading
 
 # Find the end of the log file
 def initialize():
@@ -24,8 +24,6 @@ def initialize():
         # print("last line: " + lines[len(lines)-1])
 
 def run(previous_length, log_length):
-    # spawn new bash session
-    session = pexpect.spawn('/bin/bash')
 
     # Continuously check log file for new entry
     while True:
@@ -42,15 +40,17 @@ def run(previous_length, log_length):
                     print("line " + str(i + 1) + ": " + line)
                     
                     if check in line:
-                        welcome(line, session)
+                        # welcome(line)
+                        t = threading.Timer(3, welcome, [line])
+                        t.start()
                         
         
         time.sleep(0.1)
     # Need to move this to an exit function when ctrl+c is pressed
-    session.close()
 
-def welcome(line, session):
-    print('++++YES: ' + line)
+def welcome(line):
+    # spawn new bash session
+    session = pexpect.spawn('/bin/bash')
     words = line.split(' ')
     name = ' '.join(words[:words.index('has')]) # Find the name, could be more than one word.
 
@@ -63,7 +63,11 @@ def welcome(line, session):
     # # send screen command
     session.sendline(cmd)
     session.sendline('screen -S lux -p 0 -X eval "stuff \\015"')
-    # time.sleep(0.1)
+    
+    time.sleep(0.1)
+
+    session.close()
+    
     # give the command a chance to execute
 
 def main():
