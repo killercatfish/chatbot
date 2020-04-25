@@ -14,7 +14,7 @@ def initialize():
     # A couple of globals
     log_length = 0
     previous_length = 0
-    with open('/Applications/logs/mylog.txt', 'r') as file:
+    with open('/usr/games/LuxDelux/logs/mylog.txt', 'r') as file:
         lines = file.readlines()
         log_length = len(lines)
     previous_length = log_length
@@ -27,7 +27,7 @@ def run(previous_length, log_length):
 
     # Continuously check log file for new entry
     while True:
-        with open('/Applications/logs/mylog.txt', 'r') as file:
+        with open('/usr/games/LuxDelux/logs/mylog.txt', 'r') as file:
             lines = file.readlines()
             log_length = len(lines)
             if log_length > previous_length:
