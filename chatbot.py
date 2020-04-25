@@ -55,21 +55,54 @@ def check_line(line):
         t = threading.Timer(3, welcome, [line])
         t.start()
     
-    start = line.index(":")
-    print("Start: " + str(start))
-    line_no_name = line[start+2:]
-    check_hash_mark = True if line[start+2:][0] == '#' else False
-    # print(start)
-    line_no_name = line_no_name.split(' ')
-    line_no_name_len = len(line_no_name)
+    # Checking for # and command entered.
+    if ':' in line:
+        start = line.index(":") # Check location of colon
+        # print("Start: " + str(start))
+        if len(line) > start + 2:
+            line_no_name = line[start+2:] # remove name of user who wrote
+            check_hash_mark = True if line[start+2:][0] == '#' else False # is first char #
+            line_no_name = line_no_name.split(' ') # split line by space
+            line_no_name_len = len(line_no_name) # get number of items in list
 
-
-    if check_hash_mark and line_no_name_len == 1:
-        command = line_no_name[0].rstrip()
-        print("Command entered: " + command)
-    # print(str(len(line_no_name)))
+            # High probability that a command was entered.  So we will go and check if its a valid
+            if check_hash_mark and line_no_name_len == 1:
+                command = line_no_name[0].rstrip() # remove an \n 
+                print("Command entered: " + command)
+                check_command(command)
 
     # if line[1][0] == '#' and line[len(line)-1][len(line[len(line)-1])-1]
+
+def check_command(command):
+    with open('commands/command_list.txt') as f:
+        commands = f.readlines()
+        commands = [x.strip() for x in commands]
+    print(str(commands))
+
+    if command == '#CommandList':
+
+        cmd = 'screen -S lux -p 0 -X stuff \"'
+        for i in range(len(commands)):
+            if i == len(commands) - 1:
+                cmd = cmd + commands[i]
+            else:
+                cmd = cmd + commands[i] + ' - '
+        cmd = cmd + '\"'
+        # print("CMD: " + cmd)
+        # spawn new bash session
+        session = pexpect.spawn('/bin/bash')
+        session.sendline(cmd)
+        session.sendline('screen -S lux -p 0 -X eval "stuff \\015"')
+        time.sleep(0.1)
+        session.close()
+    
+    elif command == '#Help':
+        cmd = 'screen -S lux -p 0 -X stuff \"BioButler is in the beta stages of becoming a chat bot to improve your bio experience.\"'
+        session = pexpect.spawn('/bin/bash')
+        session.sendline(cmd)
+        session.sendline('screen -S lux -p 0 -X eval "stuff \\015"')
+        time.sleep(0.1)
+        session.close()
 
 def welcome(line):
     # spawn new bash session
@@ -84,6 +117,10 @@ def welcome(line):
 
     if name == 'RogueMonk':
         cmd = 'screen -S lux -p 0 -X stuff \"Welcome, master :-)\"'
+    elif name == 'Landlord':
+        cmd = 'screen -S lux -p 0 -X stuff \"Shalom, %s :-)\"' % name
+    elif name == 'MrMartini':
+        cmd = 'screen -S lux -p 0 -X stuff \"Welcome, sir :-)\"'
     else:
         cmd = 'screen -S lux -p 0 -X stuff \"Welcome, %s :-)\"' % name
 
