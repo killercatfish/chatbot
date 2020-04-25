@@ -33,7 +33,7 @@ def run(previous_length, log_length):
             if log_length > previous_length:
                 lines_to_check = log_length - previous_length
                 previous_length = log_length
-                print("**** " + str(lines_to_check) + " lines added: ")
+                # print("**** " + str(lines_to_check) + " lines added: ")
                 for i in range(lines_to_check):
                     line = lines[len(lines)-i-1]
                     print("LINE: " + line)
@@ -72,7 +72,7 @@ def check_line(line):
             # High probability that a command was entered.  So we will go and check if its a valid
             if check_hash_mark and line_no_name_len == 1:
                 command = line_no_name[0].rstrip() # remove an \n 
-                print("Command entered: " + command)
+                # print("Command entered: " + command)
                 check_command(command)
 
     # if line[1][0] == '#' and line[len(line)-1][len(line[len(line)-1])-1]
@@ -81,7 +81,7 @@ def check_command(command):
     with open('commands/command_list.txt') as f:
         commands = f.readlines()
         commands = [x.strip() for x in commands]
-    print(str(commands))
+    # print(str(commands))
 
     if command == '#CommandList':
 
@@ -143,7 +143,7 @@ def welcome(line):
 def main():
     (previous_length, log_length) = initialize()
     run(previous_length, log_length)
-    print("hello world!")
+    # print("hello world!")
 
 if __name__ == "__main__":
     main()
