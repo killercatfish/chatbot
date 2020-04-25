@@ -48,12 +48,16 @@ def check_line(line):
     # print("***" + str(split_line[1][0]))
     # Welcome!
     player_joined = 'has joined from IP'
+    game_over = 'GameIsOver -> '
     if player_joined in line:
         # welcome(line)
         # https://www.geeksforgeeks.org/timer-objects-python/
         # https://stackoverflow.com/questions/4415672/python-theading-timer-how-to-pass-argument-to-the-callback
         t = threading.Timer(3, welcome, [line])
         t.start()
+    
+    if game_over in line:
+        print("+++GAME OVER+++")
     
     # Checking for # and command entered.
     if ':' in line:
