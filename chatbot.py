@@ -62,7 +62,7 @@ def check_line(line):
         end_name = new_text.index('(')
         name = new_text[:end_name]
         print("Well Done, " + name + "!")
-        s = threading.Timer(5, game_over, [name])
+        s = threading.Timer(5, game_over_message, [name])
         s.start()
     
     # Checking for # and command entered.
@@ -83,7 +83,7 @@ def check_line(line):
 
     # if line[1][0] == '#' and line[len(line)-1][len(line[len(line)-1])-1]
 
-def game_over(name):
+def game_over_message(name):
     cmd = 'screen -S lux -p 0 -X stuff \"Well Done, ' + name + '!\"'
     session = pexpect.spawn('/bin/bash')
     session.sendline(cmd)
