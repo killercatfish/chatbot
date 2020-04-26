@@ -63,6 +63,7 @@ def check_line(line):
         name = new_text[:end_name]
         print("Well Done, " + name + "!")
         s = threading.Timer(5, game_over, [name])
+        s.start()
     
     # Checking for # and command entered.
     if ':' in line:
