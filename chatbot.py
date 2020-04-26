@@ -61,9 +61,13 @@ def check_line(line):
         new_text = line.replace('GameIsOver -> ', '')
         end_name = new_text.index('(')
         name = new_text[:end_name]
-        print("Well Done, %s!", name)
-
-
+        print("Well Done, " + name + "!")
+        cmd = 'screen -S lux -p 0 -X stuff \"Well Done, ' + name + '!\"'
+        session = pexpect.spawn('/bin/bash')
+        session.sendline(cmd)
+        session.sendline('screen -S lux -p 0 -X eval "stuff \\015"')
+        time.sleep(0.1)
+        session.close()
     
     # Checking for # and command entered.
     if ':' in line:
