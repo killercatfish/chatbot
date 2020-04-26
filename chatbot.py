@@ -58,6 +58,12 @@ def check_line(line):
     
     if game_over in line:
         print("+++GAME OVER+++")
+        new_text = line.replace('GameIsOver -> ', '')
+        end_name = new_text.index('(')
+        name = new_text[:end_name]
+        print("Well Done, %s!", name)
+
+
     
     # Checking for # and command entered.
     if ':' in line:
