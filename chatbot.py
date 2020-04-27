@@ -57,21 +57,21 @@ def check_line(line):
         t = threading.Timer(3, welcome, [line])
         t.start()
     
-    if game_over in line:
-        print("+++GAME OVER+++")
-        new_text = line.replace('GameIsOver -> ', '')
-        end_name = new_text.index('(')
-        name = new_text[:end_name]
-        print("Well Done, " + name + "!")
-        # s = threading.Timer(5, game_over_message, [name])
-        # s.start()
-        time.sleep(3)
-        game_over_message(name)
+    # if game_over in line:
+    #     print("+++GAME OVER+++")
+    #     new_text = line.replace('GameIsOver -> ', '')
+    #     end_name = new_text.index('(')
+    #     name = new_text[:end_name]
+    #     print("Well Done, " + name + "!")
+    #     # s = threading.Timer(5, game_over_message, [name])
+    #     # s.start()
+    #     time.sleep(3)
+    #     game_over_message(name)
 
-    if new_game in line:
-        print('+++New Game+++')
-        n = threading.Timer(5, new_game_message)
-        n.start()
+    # if new_game in line:
+    #     print('+++New Game+++')
+    #     n = threading.Timer(5, new_game_message)
+    #     n.start()
     
     # Checking for # and command entered.
     if ':' in line:
