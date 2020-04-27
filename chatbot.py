@@ -49,6 +49,7 @@ def check_line(line):
     # Welcome!
     player_joined = 'has joined from IP'
     game_over = 'GameIsOver -> '
+    new_game = 'LuxWorld: run ()'
     if player_joined in line:
         # welcome(line)
         # https://www.geeksforgeeks.org/timer-objects-python/
@@ -62,8 +63,15 @@ def check_line(line):
         end_name = new_text.index('(')
         name = new_text[:end_name]
         print("Well Done, " + name + "!")
-        s = threading.Timer(5, game_over_message, [name])
-        s.start()
+        # s = threading.Timer(5, game_over_message, [name])
+        # s.start()
+        time.sleep(3)
+        game_over_message(name)
+
+    if new_game in line:
+        print('+++New Game+++')
+        n = threading.Timer(5, new_game_message)
+        n.start()
     
     # Checking for # and command entered.
     if ':' in line:
@@ -85,6 +93,14 @@ def check_line(line):
 
 def game_over_message(name):
     cmd = 'screen -S lux -p 0 -X stuff \"Well Done, ' + name + '!\"'
+    session = pexpect.spawn('/bin/bash')
+    session.sendline(cmd)
+    session.sendline('screen -S lux -p 0 -X eval "stuff \\015"')
+    time.sleep(0.1)
+    session.close()
+
+def new_game_message():
+    cmd = 'screen -S lux -p 0 -X stuff \"Good Luck All!\"'
     session = pexpect.spawn('/bin/bash')
     session.sendline(cmd)
     session.sendline('screen -S lux -p 0 -X eval "stuff \\015"')
@@ -128,8 +144,8 @@ def welcome(line):
     words = line.split(' ')
     name = ' '.join(words[:words.index('has')]) # Find the name, could be more than one word.
 
-    print("***** Line: " + line)
-    print("***** name: " + name)
+    # print("***** Line: " + line)
+    # print("***** name: " + name)
 
     # cmd = 'screen -S lux -p 0 -X stuff \"Welcome, ' + name + '\"'
 
@@ -142,7 +158,7 @@ def welcome(line):
     else:
         cmd = 'screen -S lux -p 0 -X stuff \"Welcome, %s :-)\"' % name
 
-    print("***** cmd: " + cmd)
+    # print("***** cmd: " + cmd)
     
     # # send screen command
     session.sendline(cmd)
