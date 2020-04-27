@@ -14,7 +14,7 @@ def initialize():
     # A couple of globals
     log_length = 0
     previous_length = 0
-    with open('/usr/games/LuxDelux/logs/mylog.txt', 'r') as file:
+    with open('/Applications/logs/mylog.txt', 'r') as file:
         lines = file.readlines()
         log_length = len(lines)
     previous_length = log_length
@@ -27,7 +27,7 @@ def run(previous_length, log_length):
 
     # Continuously check log file for new entry
     while True:
-        with open('/usr/games/LuxDelux/logs/mylog.txt', 'r') as file:
+        with open('/Applications/logs/mylog.txt', 'r') as file:
             lines = file.readlines()
             log_length = len(lines)
             if log_length > previous_length:
@@ -62,12 +62,8 @@ def check_line(line):
         end_name = new_text.index('(')
         name = new_text[:end_name]
         print("Well Done, " + name + "!")
-        cmd = 'screen -S lux -p 0 -X stuff \"Well Done, ' + name + '!\"'
-        session = pexpect.spawn('/bin/bash')
-        session.sendline(cmd)
-        session.sendline('screen -S lux -p 0 -X eval "stuff \\015"')
-        time.sleep(0.1)
-        session.close()
+        s = threading.Timer(5, game_over_message, [name])
+        s.start()
     
     # Checking for # and command entered.
     if ':' in line:
@@ -86,6 +82,14 @@ def check_line(line):
                 check_command(command)
 
     # if line[1][0] == '#' and line[len(line)-1][len(line[len(line)-1])-1]
+
+def game_over_message(name):
+    cmd = 'screen -S lux -p 0 -X stuff \"Well Done, ' + name + '!\"'
+    session = pexpect.spawn('/bin/bash')
+    session.sendline(cmd)
+    session.sendline('screen -S lux -p 0 -X eval "stuff \\015"')
+    time.sleep(0.1)
+    session.close()
 
 def check_command(command):
     with open('commands/command_list.txt') as f:
